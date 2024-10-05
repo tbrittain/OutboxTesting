@@ -7,7 +7,7 @@ public record GenerateMultiUser(int NumUsers);
 
 // ReSharper disable once UnusedType.Global
 public class GenerateMultiUserConsumer(
-    ILogger<GenerateMultiUserConsumer> logger, UserRepository userRepository)
+    ILogger<GenerateMultiUserConsumer> logger, IUserRepository userRepository)
     : IConsumer<GenerateMultiUser>
 {
     public async Task Consume(ConsumeContext<GenerateMultiUser> context)

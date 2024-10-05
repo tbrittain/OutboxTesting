@@ -1,8 +1,16 @@
 ﻿using OutboxTesting.MassTransit.ExampleDatabase;
+using OutboxTesting.MassTransit.Models;
 
 namespace OutboxTesting.MassTransit.Services;
 
-public class UserRepository(ExampleDbContext exampleDbContext)
+public interface IUserRepository
+{
+    Task<Models.User> CreateUser();
+    Task<Models.User?> GetUser(int id);
+    Task<bool> DeleteUser(int id);
+}
+
+public class UserRepository(ExampleDbContext exampleDbContext) : IUserRepository
 {
     public async Task<Models.User> CreateUser()
     {
@@ -12,7 +20,7 @@ public class UserRepository(ExampleDbContext exampleDbContext)
 
         return new Models.User
         {
-            Id = user.Id,
+            Id = new HashedId(user.Id),
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email
@@ -30,13 +38,13 @@ public class UserRepository(ExampleDbContext exampleDbContext)
 
         return new Models.User
         {
-            Id = user.Id,
+            Id = new HashedId(user.Id),
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email
         };
     }
-    
+
     public async Task<bool> DeleteUser(int id)
     {
         var user = await exampleDbContext.Users.FindAsync(id);

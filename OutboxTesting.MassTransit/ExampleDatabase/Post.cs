@@ -21,11 +21,10 @@ public static class PostExtensions
         .RuleFor(p => p.Title, f => f.Lorem.Sentence())
         .RuleFor(p => p.Content, f => f.Lorem.Paragraphs(3));
 
-    public static IEnumerable<Post> GeneratePosts(User user)
+    public static IEnumerable<Post> GeneratePosts(int userId)
     {
         var post = UserConfiguration.Generate();
-        post.UserId = user.Id;
-        post.User = user;
+        post.UserId = userId;
 
         yield return post;
     }
