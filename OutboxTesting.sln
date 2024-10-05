@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutboxTesting.MassTransit", "OutboxTesting.MassTransit\OutboxTesting.MassTransit.csproj", "{CAB09999-3966-4497-9AFA-53494A48C80A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CAB09999-3966-4497-9AFA-53494A48C80A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAB09999-3966-4497-9AFA-53494A48C80A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAB09999-3966-4497-9AFA-53494A48C80A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAB09999-3966-4497-9AFA-53494A48C80A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
