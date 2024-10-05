@@ -1,4 +1,5 @@
 using OutboxTesting.MassTransit;
+using OutboxTesting.MassTransit.ExampleDatabase;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,5 +22,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
+#if DEBUG
+ExampleDbContext.ApplyMigrations(app);
+#endif
 
 app.Run();

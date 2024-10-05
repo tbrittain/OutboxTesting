@@ -48,4 +48,11 @@ public class ExampleDbContext : DbContext
 
         return base.SaveChangesAsync(cancellationToken);
     }
+
+    public static void ApplyMigrations(IHost app)
+    {
+        using var scope = app.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ExampleDbContext>();
+        dbContext.Database.Migrate();
+    }
 }
