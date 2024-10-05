@@ -39,15 +39,10 @@ public class ExampleDbContext : DbContext
                 case EntityState.Modified:
                     ((AuditableEntity)entry.Entity).UpdatedAt = DateTime.UtcNow;
                     break;
-                case EntityState.Detached:
-                    break;
-                case EntityState.Unchanged:
-                    break;
                 case EntityState.Deleted:
+                    entry.State = EntityState.Modified;
                     ((AuditableEntity)entry.Entity).DeletedAt = DateTime.UtcNow;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 

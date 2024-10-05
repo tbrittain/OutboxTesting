@@ -45,5 +45,12 @@ public static class PostExtensions
                 .WithMany(u => u.LikedPosts)
                 .UsingEntity(j => j.ToTable("PostLikes"));
         });
+
+        modelBuilder.Entity<Post>()
+            .HasQueryFilter(r => r.DeletedAt != null);
+
+        modelBuilder.Entity<Post>()
+            .HasIndex(r => r.DeletedAt)
+            .HasFilter("DeletedAt IS NOT NULL");
     }
 }

@@ -16,6 +16,7 @@ public static class DependencyInjection
                 o.UseBusOutbox();
             });
 
+            // TODO: use rabbitmq with docker
             x.UsingInMemory((context, configurator) =>
             {
                 configurator.UseMessageRetry(r => r.Intervals(100, 500, 1000, 1500));

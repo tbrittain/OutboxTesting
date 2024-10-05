@@ -33,7 +33,7 @@ public static class UserExtensions
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(u => u.Id).IsClustered();
-            
+
             entity.HasMany(u => u.Posts)
                 .WithOne(p => p.User)
                 .HasForeignKey(p => p.UserId)
@@ -47,5 +47,12 @@ public static class UserExtensions
                 .WithMany(p => p.LikedBy)
                 .UsingEntity(j => j.ToTable("PostLikes"));
         });
+
+        modelBuilder.Entity<User>()
+            .HasQueryFilter(r => r.DeletedAt != null);
+        
+        modelBuilder.Entity<User>()
+            .HasIndex(r => r.DeletedAt)
+            .HasFilter("DeletedAt IS NOT NULL");
     }
 }
