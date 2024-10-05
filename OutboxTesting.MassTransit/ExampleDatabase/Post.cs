@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bogus;
+using Microsoft.EntityFrameworkCore;
 
 namespace OutboxTesting.MassTransit.ExampleDatabase;
 
@@ -16,10 +17,25 @@ public class Post : AuditableEntity
 
 public static class PostExtensions
 {
+    private static readonly Faker<Post> UserConfiguration = new Faker<Post>()
+        .RuleFor(p => p.Title, f => f.Lorem.Sentence())
+        .RuleFor(p => p.Content, f => f.Lorem.Paragraphs(3));
+
+    public static IEnumerable<Post> GeneratePosts(User user)
+    {
+        var post = UserConfiguration.Generate();
+        post.UserId = user.Id;
+        post.User = user;
+
+        yield return post;
+    }
+
     public static void ConfigurePost(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Post>(entity =>
         {
+            entity.HasKey(u => u.Id).IsClustered();
+
             entity.HasOne(p => p.User)
                 .WithMany(u => u.Posts)
                 .HasForeignKey(p => p.UserId)
