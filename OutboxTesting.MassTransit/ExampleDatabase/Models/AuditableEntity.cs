@@ -1,4 +1,4 @@
-﻿namespace OutboxTesting.MassTransit.ExampleDatabase;
+﻿namespace OutboxTesting.MassTransit.ExampleDatabase.Models;
 
 public abstract class AuditableEntity
 {

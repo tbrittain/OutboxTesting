@@ -1,4 +1,5 @@
 ﻿using OutboxTesting.MassTransit.ExampleDatabase;
+using OutboxTesting.MassTransit.ExampleDatabase.Models;
 using OutboxTesting.MassTransit.Models;
 using Post = OutboxTesting.MassTransit.Models.Post;
 

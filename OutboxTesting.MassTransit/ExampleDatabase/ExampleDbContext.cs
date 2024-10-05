@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using OutboxTesting.MassTransit.ExampleDatabase.Models;
 
 namespace OutboxTesting.MassTransit.ExampleDatabase;
 
@@ -17,11 +18,12 @@ public class ExampleDbContext : DbContext
         modelBuilder.ConfigureUser();
         modelBuilder.ConfigurePost();
 
-        base.OnModelCreating(modelBuilder);
-
+        // The following are MassTransit-related entities
         modelBuilder.AddInboxStateEntity();
         modelBuilder.AddOutboxMessageEntity();
         modelBuilder.AddOutboxStateEntity();
+        
+        base.OnModelCreating(modelBuilder);
     }
 
     override public Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Bogus;
+﻿using Bogus;
+using Microsoft.EntityFrameworkCore;
 
-namespace OutboxTesting.MassTransit.ExampleDatabase;
+namespace OutboxTesting.MassTransit.ExampleDatabase.Models;
 
 public class User : AuditableEntity
 {

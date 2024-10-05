@@ -1,4 +1,5 @@
 ﻿using OutboxTesting.MassTransit.ExampleDatabase;
+using OutboxTesting.MassTransit.ExampleDatabase.Models;
 using OutboxTesting.MassTransit.Models;
 
 namespace OutboxTesting.MassTransit.Services;
