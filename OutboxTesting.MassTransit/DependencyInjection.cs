@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using MassTransit;
 using OutboxTesting.MassTransit.ExampleDatabase;
+using OutboxTesting.MassTransit.PubSub;
 using OutboxTesting.MassTransit.Services;
 
 namespace OutboxTesting.MassTransit;
@@ -18,6 +19,8 @@ public static class DependencyInjection
 
         services.AddMassTransit(x =>
         {
+            x.AddConsumer<GenerateMultiUserConsumer>();
+            
             // https://masstransit.io/documentation/configuration/middleware/outbox#configuration
             x.AddEntityFrameworkOutbox<ExampleDbContext>(o =>
             {

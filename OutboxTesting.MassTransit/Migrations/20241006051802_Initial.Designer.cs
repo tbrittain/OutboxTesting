@@ -12,7 +12,7 @@ using OutboxTesting.MassTransit.ExampleDatabase;
 namespace OutboxTesting.MassTransit.Migrations
 {
     [DbContext(typeof(ExampleDbContext))]
-    [Migration("20241005231658_Initial")]
+    [Migration("20241006051802_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -311,7 +311,7 @@ namespace OutboxTesting.MassTransit.Migrations
                     b.HasOne("OutboxTesting.MassTransit.ExampleDatabase.Models.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");

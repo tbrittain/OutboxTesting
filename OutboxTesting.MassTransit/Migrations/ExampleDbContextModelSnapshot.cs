@@ -308,7 +308,7 @@ namespace OutboxTesting.MassTransit.Migrations
                     b.HasOne("OutboxTesting.MassTransit.ExampleDatabase.Models.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");

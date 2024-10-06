@@ -37,7 +37,7 @@ public static class UserExtensions
             entity.HasMany(u => u.Posts)
                 .WithOne(p => p.User)
                 .HasForeignKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasMany(u => u.Following)
                 .WithMany(u => u.Followers)

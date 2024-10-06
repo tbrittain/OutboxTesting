@@ -8,7 +8,7 @@ namespace OutboxTesting.MassTransit.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UserController(IUserRepository userRepository, IPublishEndpoint publishEndpoint) : ControllerBase
+public class UserController(IUserRepository userRepository, IBus bus) : ControllerBase
 {
     [HttpPost]
     public async Task<ActionResult<User>> CreateUser()
@@ -27,7 +27,7 @@ public class UserController(IUserRepository userRepository, IPublishEndpoint pub
     [HttpPost("multi")]
     public async Task<ActionResult> CreateMultiUser([FromBody]CreateMultiUserRequestBody body)
     {
-        await publishEndpoint.Publish(new GenerateMultiUser(body.NumUsers));
+        await bus.Publish(new GenerateMultiUser(body.NumUsers));
         return NoContent();
     }
 
