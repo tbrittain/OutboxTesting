@@ -49,10 +49,10 @@ public static class UserExtensions
         });
 
         modelBuilder.Entity<User>()
-            .HasQueryFilter(r => r.DeletedAt != null);
+            .HasQueryFilter(r => r.DeletedAt == null);
         
         modelBuilder.Entity<User>()
             .HasIndex(r => r.DeletedAt)
-            .HasFilter("DeletedAt IS NOT NULL");
+            .HasFilter("DeletedAt IS NULL");
     }
 }

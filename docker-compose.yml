@@ -13,6 +13,7 @@
       - "1433:1433"
     volumes:
       - sqlserver-data:/var/opt/mssql
+    restart: unless-stopped
   rabbitmq:
     image: "rabbitmq:3.13.7-management"
     ports:
@@ -20,6 +21,7 @@
       - "15672:15672"
     volumes:
       - "rabbitmq_data:/data"
+    restart: unless-stopped
 volumes:
   sqlserver-data:
   rabbitmq_data:

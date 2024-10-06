@@ -8,7 +8,7 @@ public class ExampleDbContext : DbContext
 {
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Post> Posts { get; set; }
-    
+
     public ExampleDbContext(DbContextOptions<ExampleDbContext> options) : base(options)
     {
     }
@@ -22,28 +22,32 @@ public class ExampleDbContext : DbContext
         modelBuilder.AddInboxStateEntity();
         modelBuilder.AddOutboxMessageEntity();
         modelBuilder.AddOutboxStateEntity();
-        
+
         base.OnModelCreating(modelBuilder);
     }
 
     override public Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         var entries = ChangeTracker.Entries()
-            .Where(e => e is {Entity: AuditableEntity, State: EntityState.Added or EntityState.Modified});
+            .Where(e => e is
+            {
+                Entity: AuditableEntity,
+                State: EntityState.Added or EntityState.Modified or EntityState.Deleted
+            });
 
         foreach (var entry in entries)
         {
             switch (entry.State)
             {
                 case EntityState.Added:
-                    ((AuditableEntity)entry.Entity).CreatedAt = DateTime.UtcNow;
+                    ((AuditableEntity) entry.Entity).CreatedAt = DateTime.UtcNow;
                     break;
                 case EntityState.Modified:
-                    ((AuditableEntity)entry.Entity).UpdatedAt = DateTime.UtcNow;
+                    ((AuditableEntity) entry.Entity).UpdatedAt = DateTime.UtcNow;
                     break;
                 case EntityState.Deleted:
                     entry.State = EntityState.Modified;
-                    ((AuditableEntity)entry.Entity).DeletedAt = DateTime.UtcNow;
+                    ((AuditableEntity) entry.Entity).DeletedAt = DateTime.UtcNow;
                     break;
             }
         }

@@ -1,6 +1,5 @@
 ﻿using OutboxTesting.MassTransit.ExampleDatabase;
 using OutboxTesting.MassTransit.ExampleDatabase.Models;
-using OutboxTesting.MassTransit.Models;
 using Post = OutboxTesting.MassTransit.Models.Post;
 
 namespace OutboxTesting.MassTransit.Services;
@@ -26,7 +25,7 @@ public class PostRepository(ExampleDbContext exampleDbContext, ILogger<PostRepos
 
         return new Post
         {
-            Id = new HashedId(post.Id),
+            Id = post.Id,
             Title = post.Title,
             Content = post.Content
         };
@@ -35,7 +34,6 @@ public class PostRepository(ExampleDbContext exampleDbContext, ILogger<PostRepos
     public async Task<Post?> GetPost(int id)
     {
         var post = await exampleDbContext.Posts.FindAsync(id);
-
         if (post is null)
         {
             logger.LogWarning("Post not found when attempting to get: {Id}", id);
@@ -44,7 +42,7 @@ public class PostRepository(ExampleDbContext exampleDbContext, ILogger<PostRepos
 
         return new Post
         {
-            Id = new HashedId(post.Id),
+            Id = post.Id,
             Title = post.Title,
             Content = post.Content
         };

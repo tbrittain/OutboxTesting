@@ -46,10 +46,10 @@ public static class PostExtensions
         });
 
         modelBuilder.Entity<Post>()
-            .HasQueryFilter(r => r.DeletedAt != null);
+            .HasQueryFilter(r => r.DeletedAt == null);
 
         modelBuilder.Entity<Post>()
             .HasIndex(r => r.DeletedAt)
-            .HasFilter("DeletedAt IS NOT NULL");
+            .HasFilter("DeletedAt IS NULL");
     }
 }

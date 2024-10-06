@@ -1,6 +1,5 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using OutboxTesting.MassTransit.Models;
 using OutboxTesting.MassTransit.Services;
 
 namespace OutboxTesting.MassTransit.Controllers;
@@ -11,25 +10,22 @@ public class PostController(IPostRepository postRepository, IPublishEndpoint pub
 {
     public class CreatePostRequestBody
     {
-        public string UserId { get; set; }
+        public int UserId { get; set; }
     }
 
     [HttpPost]
     public async Task<ActionResult> CreatePost([FromBody] CreatePostRequestBody body)
     {
-        var hashedUserId = new HashedId(body.UserId);
-        var post = await postRepository.CreatePost(hashedUserId.Value);
-        var uri = Url.Action("Get", new {id = post.Id.EncodedValue});
+        var post = await postRepository.CreatePost(body.UserId);
+        var uri = Url.Action("Get", new {id = post.Id});
 
         return Created(uri, post);
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult> Get(string id)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult> Get(int id)
     {
-        var hashedId = new HashedId(id);
-        var post = await postRepository.GetPost(hashedId.Value);
-
+        var post = await postRepository.GetPost(id);
         if (post is null)
         {
             return NotFound();
@@ -38,46 +34,32 @@ public class PostController(IPostRepository postRepository, IPublishEndpoint pub
         return Ok(post);
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(string id)
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> Delete(int id)
     {
-        var hashedId = new HashedId(id);
-        var post = await postRepository.GetPost(hashedId.Value);
-
-        if (post is null)
+        var ok = await postRepository.DeletePost(id);
+        if (!ok)
         {
-            return NotFound();
+            return UnprocessableEntity(); 
         }
-
-        await postRepository.DeletePost(hashedId.Value);
 
         return NoContent();
     }
 
     public class LikePostRequestBody
     {
-        public string UserId { get; set; }
+        public int UserId { get; set; }
     }
 
-    [HttpPost("{id}/like")]
+    [HttpPost("{id:int}/like")]
     public async Task<ActionResult> Like(
-        string id,
+        int id,
         [FromBody] LikePostRequestBody body)
     {
-        var hashedId = new HashedId(id);
-        var post = await postRepository.GetPost(hashedId.Value);
-
-        if (post is null)
-        {
-            return NotFound();
-        }
-
-        var hashedUserId = new HashedId(body.UserId);
-        var ok = await postRepository.LikePost(hashedId.Value, hashedUserId.Value);
-
+        var ok = await postRepository.LikePost(id, body.UserId);
         if (!ok)
         {
-            return BadRequest();
+            return UnprocessableEntity();
         }
 
         return NoContent();

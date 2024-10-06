@@ -14,7 +14,7 @@ public class UserController(IUserRepository userRepository, IBus bus) : Controll
     public async Task<ActionResult<User>> CreateUser()
     {
         var user = await userRepository.CreateUser();
-        var uri = Url.Action("Get", new {id = user.Id.EncodedValue});
+        var uri = Url.Action("Get", new {id = user.Id});
 
         return Created(uri, user);
     }
@@ -31,11 +31,10 @@ public class UserController(IUserRepository userRepository, IBus bus) : Controll
         return NoContent();
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<User>> Get(string id)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<User>> Get(int id)
     {
-        var hashedId = new HashedId(id);
-        var user = await userRepository.GetUser(hashedId.Value);
+        var user = await userRepository.GetUser(id);
 
         if (user is null)
         {
@@ -45,18 +44,23 @@ public class UserController(IUserRepository userRepository, IBus bus) : Controll
         return Ok(user);
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(string id)
+    [HttpGet("multi")]
+    public async Task<ActionResult<PaginatedResult<User>>> GetMulti(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var hashedId = new HashedId(id);
-        var user = await userRepository.GetUser(hashedId.Value);
+        var users = await userRepository.GetUsers(pageNumber, pageSize);
+        return Ok(users);
+    }
 
-        if (user is null)
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        var ok = await userRepository.DeleteUser(id);
+        if (!ok)
         {
-            return NotFound();
+            return UnprocessableEntity();
         }
-
-        await userRepository.DeleteUser(hashedId.Value);
 
         return NoContent();
     }

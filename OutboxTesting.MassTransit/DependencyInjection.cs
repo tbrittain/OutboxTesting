@@ -13,6 +13,7 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("SqlServer");
         Trace.Assert(!string.IsNullOrWhiteSpace(connectionString), "Connection string is null or empty");
         services.AddSqlServer<ExampleDbContext>(connectionString);
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IPostRepository, PostRepository>();
