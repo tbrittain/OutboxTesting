@@ -31,6 +31,18 @@ public class UserController(IUserRepository userRepository, IBus bus) : Controll
         return NoContent();
     }
 
+    [HttpPost("{id:int}/follow/{toFollow:int}")]
+    public async Task<ActionResult> FollowUser(int id, int toFollow)
+    {
+        var ok = await userRepository.FollowUser(id, toFollow);
+        if (!ok)
+        {
+            return UnprocessableEntity();
+        }
+
+        return NoContent();
+    }
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<User>> Get(int id)
     {

@@ -10,10 +10,10 @@ public class User : AuditableEntity
     public string LastName { get; set; }
     public string Email { get; set; }
     
-    public virtual ICollection<Post> Posts { get; set; }
-    public virtual ICollection<User> Following { get; set; }
-    public virtual ICollection<User> Followers { get; set; }
-    public virtual ICollection<Post> LikedPosts { get; set; }
+    public virtual ICollection<Post> Posts { get; set; } = [];
+    public virtual ICollection<User> Following { get; set; } = [];
+    public virtual ICollection<User> Followers { get; set; } = [];
+    public virtual ICollection<Post> LikedPosts { get; set; } = [];
 }
 
 public static class UserExtensions

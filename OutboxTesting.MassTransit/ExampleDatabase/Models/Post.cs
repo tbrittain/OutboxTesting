@@ -12,7 +12,7 @@ public class Post : AuditableEntity
     public int UserId { get; set; }
     public virtual User User { get; set; }
     
-    public virtual ICollection<User> LikedBy { get; set; }
+    public virtual ICollection<User> LikedBy { get; set; } = [];
 }
 
 public static class PostExtensions

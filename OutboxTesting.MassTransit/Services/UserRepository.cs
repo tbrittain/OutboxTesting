@@ -12,9 +12,10 @@ public interface IUserRepository
     Task<User?> GetUser(int id);
     Task<PaginatedResult<User>> GetUsers(int pageNumber, int pageSize);
     Task<bool> DeleteUser(int id);
+    Task<bool> FollowUser(int followerId, int toFollowId);
 }
 
-public class UserRepository(ExampleDbContext exampleDbContext) : IUserRepository
+public class UserRepository(ExampleDbContext exampleDbContext, ILogger<UserRepository> logger) : IUserRepository
 {
     public async Task<User> CreateUser()
     {
@@ -39,6 +40,7 @@ public class UserRepository(ExampleDbContext exampleDbContext) : IUserRepository
 
         if (user is null)
         {
+            logger.LogWarning("User not found when attempting to get: {Id}", id);
             return null;
         }
 
@@ -66,7 +68,7 @@ public class UserRepository(ExampleDbContext exampleDbContext) : IUserRepository
                 LastName = u.LastName,
                 Email = u.Email
             });
-        
+
         var users = await queryable.ToListAsync();
 
         var totalUsers = await exampleDbContext.Users.CountAsync();
@@ -78,11 +80,33 @@ public class UserRepository(ExampleDbContext exampleDbContext) : IUserRepository
         var user = await exampleDbContext.Users.FindAsync(id);
         if (user is null)
         {
+            logger.LogWarning("User not found when attempting to delete: {Id}", id);
             return false;
         }
 
         exampleDbContext.Users.Remove(user);
         var ok = await exampleDbContext.SaveChangesAsync();
         return ok > 0;
+    }
+
+    public async Task<bool> FollowUser(int followerId, int toFollowId)
+    {
+        var users = await exampleDbContext.Users
+            .Where(u => u.Id == followerId || u.Id == toFollowId)
+            .ToListAsync();
+
+        if (users.Count != 2)
+        {
+            logger.LogWarning("One or both users not found when attempting to follow: {FollowerId}, {FolloweeId}", followerId, toFollowId);
+            return false;
+        }
+        
+        var follower = users.Single(u => u.Id == followerId);
+        var toFollow = users.Single(u => u.Id == toFollowId);
+
+        follower.Following.Add(toFollow);
+        await exampleDbContext.SaveChangesAsync();
+        
+        return true;
     }
 }
